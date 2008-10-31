@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Error Handling</title><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /><link rel="start" href="index.html" title="Python-AD reference manual" /><link rel="up" href="reference.html" title="Chapter 1. API Reference" /><link rel="prev" href="locator.html" title="Resource Location" /><link rel="next" href="license.html" title="Appendix A. License" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Error Handling</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="locator.html">Prev</a> </td><th width="60%" align="center">Chapter 1. API Reference</th><td width="20%" align="right"> <a accesskey="n" href="license.html">Next</a></td></tr></table><hr /></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id1244840"></a>Error Handling</h2></div></div></div>
+
+  Two exceptions are defined for error handling. It is recommended to import
+  the exception as per the code fragment below:
+
+  <pre class="programlisting">
+  from ad import Error as ADError
+  from ad import LDAPError
+  </pre>
+
+  The <code class="classname">ADError</code> exception is raised for all errors that
+  are encountered by Python-AD. The <code class="classname">LDAPError</code> exception
+  is imported from Python-LDAP and is raised when an exception is raised by
+  that module. Therefore, to ensure that all exceptions are caught, you always
+  need to capture both exceptions, as illustrated by the example below:
+
+  <pre class="programlisting">
+  client = Client(domain)
+  try:
+      client.add(dn, attrs)
+  except (ADError, LDAPError):
+      pass
+  </pre></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="locator.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="license.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Resource Location </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Appendix A. License</td></tr></table></div></body></html>
