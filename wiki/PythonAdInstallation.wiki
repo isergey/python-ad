@@ -12,7 +12,7 @@ Python-AD depends on the following software packages. These must be installed be
  * [http://www.dabeaz.com/ply/ PLY] >= ''unknown''. PLY is used for parsing LDAP search filters.
  * [http://web.mit.edu/Kerberos/ MIT Kerberos] >= 1.3
    * Version 1.6 or higher, which implements [http://krbdev.mit.edu/rt/Ticket/Display.html?user=guest&pass=guest&id=2652 server-side canonicalisation], is greatly recommended.
- * [http://code.google.com/p/python-nose/ py Nose] is required for running the unit tests.
+ * [http://code.google.com/p/python-nose/ Nose] is used for running the unit tests.
 
 == Installation ==
 
