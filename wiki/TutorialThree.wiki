@@ -1,6 +1,6 @@
 = Tutorial Three =
 
-The example below demonstrates how to query a specific server in a domain. Normally Python-AD uses ''serverless binding'', which means that Python-AD will select a suitable domain controller automatically. Sometimes however this is not what you want and instead you want to target a specific domain controller. This is possible with Python-AD. The example below again lists the search user functionality, but now it specifically targets the domain controller with the PDC emulator (Primary Domain Controller emulator) role.
+The example below demonstrates how to query a specific server in a domain. Normally Python-AD uses ''serverless binding'', which means that Python-AD will select a suitable domain controller for you automatically. Sometimes this is not desirable and you want to target a specific domain controller instead. The example below implements the search user functionality again, but now it specifically targets the domain controller with the PDC emulator role.
 
 {{{
 from ad import Client, Creds, Locator, activate
