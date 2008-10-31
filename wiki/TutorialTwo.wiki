@@ -2,7 +2,7 @@
 
 This tutorial demonstrates how to search the global catalog. Querying the global catalog is almost identical to querying a normal LDAP server: the difference is that to query a global catalog we pass the `scheme='gc'` parameter to `search()`.
 
-The example below also demonstrates how to load credentials from the operating system. This is done by calling `creds.load()` below. As you can see we do not need to supply a principal name or a password to this call.
+The example below also demonstrates how to load credentials from the operating system. This is done by calling `creds.load()` below. As you can see we do not need to supply a principal name or a password to this call. It does require though that you have a valid Kerberos ticket in your ticket cache.
 
 {{{
 from ad import Client, Creds, activate
