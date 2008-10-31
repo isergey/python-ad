@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>AD Client Interface</title><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /><link rel="start" href="index.html" title="Python-AD reference manual" /><link rel="up" href="reference.html" title="Chapter 1. API Reference" /><link rel="prev" href="reference.html" title="Chapter 1. API Reference" /><link rel="next" href="locator.html" title="Resource Location" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">AD Client Interface</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="reference.html">Prev</a> </td><th width="60%" align="center">Chapter 1. API Reference</th><td width="20%" align="right"> <a accesskey="n" href="locator.html">Next</a></td></tr></table><hr /></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id1244677"></a>AD Client Interface</h2></div></div></div><p>
+  The actual operations on Active Directory are grouped in a single class
+  called <code class="classname">Client</code>. This class is available from the
+  <span class="package">ad</span> package.
+  </p><pre class="programlisting">
+  from ad import Client
+  </pre><p>
+  The constructor to the <code class="classname">Client</code> class takes one
+  argument: the domain.
+  </p><pre class="programlisting">
+  class Client(object):
+      """AD client interface."""
+
+      def __init__(self, domain):
+        """Constructor."""
+  </pre><p>
+  The <em class="parameter"><code>domain</code></em> parameter sets the default domain for the
+  <code class="classname">Client</code> class. As with the
+  <code class="classname">Creds</code> class, the requirement to specify the domain
+  does not mean that operations through the client are limited to the
+  specified domain: all operations are available to any domain that is part of
+  the same forest.
+  </p><p>
+  Instances of the <code class="classname">Client</code> class will try to access the
+  globally installed <code class="classname">Creds</code> instance. Therefore you must
+  ensure that credentials are available before you use any functionality in
+  this class.
+  </p><p>
+  The following methods are provided by the <code class="classname">Client</code>
+  class:
+  </p><pre class="programlisting">
+
+      def domain_name_from_dn(self, dn):
+          """Given a DN, return a domain."""
+  </pre><p>
+  The function <code class="function">domain_name_from_dn()</code> is a utility
+  function that, given an LDAP distinguished name, will return the Active
+  Directory domain name. For example, if the <em class="parameter"><code>dn</code></em>
+  parameter is set to <code class="literal">cn=users,dc=freeadi,dc=org</code>, the
+  return value of this method will be <code class="literal">FREEADI.ORG</code>.
+  </p><pre class="programlisting">
+
+      def dn_from_domain_name(self, name):
+          """Given a domain name, return a DN."""
+  </pre><p>
+  The function <code class="function">dn_from_domain_name()</code> is the inverse of
+  <code class="function">domain_name_from_dn()</code>. For example, if
+  <em class="parameter"><code>name</code></em> is set to <code class="literal">LINUX.FREEADI.ORG</code>,
+  the return value of this method will be
+  <code class="literal">dc=linux,dc=freeadi,dc=org</code>.
+  </p><pre class="programlisting">
+
+      def domain(self):
+          """Return the domain name of the current domain."""
+  </pre><p>
+  This method returns the current default domain.
+  </p><pre class="programlisting">
+
+      def domain_base(self):
+          """Return the base DN of the domain."""
+  </pre><p>
+  The method <code class="function">domain_base()</code> returns the LDAP base DN for
+  the curent domain. If <code class="literal">client</code> is an instance of
+  <code class="classname">Client</code>, then this is equivalent to
+  <code class="literal">client.dn_from_domain_name(client.domain())</code>.
+  </p><pre class="programlisting">
+      def forest(self):
+          """Return the domain name of the forest root."""
+  </pre><p>
+  This method returns the root of the forest for the current domain. In case
+  the current domain is a child domain, this will return something different
+  than the <code class="function">domain()</code> method.
+  </p><pre class="programlisting">
+      def forest_base(self):
+          """Return the base DN of the forest root."""
+  </pre><p>
+  The <code class="function">forest_base()</code> method returns the LDAP base DN for
+  the forest. This function is equivalent to
+  <code class="literal">client.dn_from_domain_name(client.forest())</code>.
+  </p><pre class="programlisting">
+      def schema_base(self):
+          """Return the base DN of the schema naming_context."""
+  </pre><p>
+  This method returns the LDAP base DN for the schema naming context for the
+  Active Directory forest.
+  </p><pre class="programlisting">
+      def configuration_base(self):
+          """Return the base DN of the configuration naming_context."""
+  </pre><p>
+  This method returns the LDAP base DN for the configuration namign context
+  for the Active Directory forest.
+  </p><pre class="programlisting">
+      def naming_contexts(self):
+          """Return a list of all naming_contexts."""
+  </pre><p>
+  The <code class="function">naming_contexts()</code> returns a list of all naming
+  contexts in the forest. The term naming context is the Microsoft name for a
+  directory partition. Each naming context is present on one or multiple
+  domain controllers, and each domain controller normally has multiple naming
+  contexts.
+  </p><pre class="programlisting">
+      def domains(self):
+          """Return a list of all domains in the forest."""
+  </pre><p>
+  This function returns a list of all domains that are present in the forest.
+  </p><pre class="programlisting">
+      def close(self):
+          """Close any active LDAP connection."""
+  </pre><p>
+  The <code class="function">close()</code> closes all currently open connections to
+  the Active Directory.
+  </p><pre class="programlisting">
+      def search(self, filter=None, base=None, scope=None, attrs=None,
+                 server=None, scheme=None):
+          """Search the Active Directory."""
+  </pre><p>
+  The <code class="function">search()</code> method is probably the most important
+  function in Python-AD. It searches the Active Directory and returns a list
+  of objects that match the query. The <em class="parameter"><code>filter</code></em> argument
+  specifies the LDAP search filter. If it is absent, the default filter is
+  <code class="literal">(objectClass=*)</code>. The <em class="parameter"><code>base</code></em>
+  arguments gives the LDAP search base. This search base must either be blank
+  (<code class="literal">''</code>) in which case the rootDSE is searched, or it must be
+  within one of the naming contexts of the forest. The
+  <em class="parameter"><code>scope</code></em> parameter must be a string of the value
+  <code class="literal">'base'</code>, <code class="literal">'onelevel'</code> or
+  <code class="literal">'subtree'</code>. For compatibility reasons, the
+  <code class="literal">SCOPE_*</code> constants as defined by  Python-LDAP are accepted
+  as well.  The <em class="parameter"><code>attrs</code></em> parameter specifies the attributes
+  to request. If it is given, it must be a list of strings. If it is not
+  specified, then the default is to request all attributes. The
+  <em class="parameter"><code>server</code></em> parameter is another optional parameter that
+  specifies the server to bind to. Normally, Python-AD operates in
+  <span class="emphasis"><em>serverless binding</em></span> mode. In this mode, a suitable
+  domain controller is selected automatically. In some situation this may not
+  be desidered however and for these situations the
+  <em class="parameter"><code>server</code></em> can be used. Finally the
+  <em class="parameter"><code>scheme</code></em> parameter specifies the search scheme. It must
+  be one of <code class="literal">'ldap'</code> (the default) or <code class="literal">'gc'</code>
+  to search the global catalog.
+  </p><p>
+  The return value of <code class="function">search()</code> is a list of 2-tuples.
+  Each tuple consists of a distinguished name and a dictionary of attributes.
+  The dictionary has string keys (the attribute names) and a list of strings
+  as it values (the attribute values).
+  </p><pre class="programlisting">
+      def add(self, dn, attrs, server=None):
+          """Add a new object to Active Directory."""
+  </pre><p>
+  The <code class="function">add()</code> function adds an object to the directory. The
+  parameter <em class="parameter"><code>dn</code></em> specifies the distinguished name of the
+  attribute to be added. The parameter <em class="parameter"><code>attrs</code></em> specifies
+  the attributes of the object. It must be a list of 2-tuples, with the first
+  tuple entry the attribute name, and the second tuple entry a list of strings
+  containing the attribute values. The <em class="parameter"><code>server</code></em> parameter
+  can be used to override the default binding behaviour and has the same
+  meaning as for <code class="function">search()</code>.
+  </p><pre class="programlisting">
+      def modify(self, dn, mods, server=None):
+          """Modify an LDAP object."""
+  </pre><p>
+  The <code class="function">modify()</code> method modifies an existing object in the
+  directory. The <em class="parameter"><code>dn</code></em> parameter specifies the
+  distinguished name of the object modify, while <em class="parameter"><code>mods</code></em>
+  specifies the modifications. The latter must be a list of 3-tuples. Each
+  tuple consists of the modify operation (one of <code class="literal">'add'</code>,
+  <code class="literal">'replace'</code> or <code class="literal">'delete'</code> to add, replace
+  or delete an attribute value respectively -- the Python-LDAP
+  <code class="literal">MOD_*</code> constants are supported for compatibility), the
+  attribute name, and the attribute value. The latter must be a list of
+  strings. The <em class="parameter"><code>server</code></em> parameter can be used to override
+  the default binding behaviour and has the same meaning as for
+  <code class="function">search()</code>.
+  </p><pre class="programlisting">
+      def delete(self, dn, server=None):
+          """Delete the LDAP object referenced by `dn'."""
+  </pre><p>
+  The <code class="function">delete()</code> method removes an object from the
+  directory. The <em class="parameter"><code>dn</code></em> parameter specifies the
+  distinguished name of the object to remove. The <em class="parameter"><code>server</code></em>
+  parameter can be used to override the default binding behaviour and has the
+  same meaning as for <code class="function">search()</code>.
+  </p><pre class="programlisting">
+      def modrdn(self, dn, newrdn, delold=True, server=None):
+          """Change the RDN of an object in Active Direcotry."""
+  </pre><p>
+  The <code class="function">modrdn()</code> method modifies the relative distinuished
+  name of the LDAP object with distinguished name <em class="parameter"><code>dn</code></em> to
+  the value specified by the <em class="parameter"><code>newrdn</code></em>, which must be in
+  the form of <code class="literal">"attr=value"</code>. The
+  <em class="parameter"><code>delold</code></em> specifies whether the old RDN value is
+  retained or not. The <em class="parameter"><code>server</code></em> parameter has the same
+  meaning as for <code class="function">search()</code>.
+  </p><pre class="programlisting">
+      def rename(self, dn, newrdn, newsuperior=None, delold=True, server=None):
+          """Change the RDN of an object in Active Directory, and optionally
+          move it to a new part of the tree."""
+  </pre><p>
+  The <code class="function">rename()</code> method is like
+  <code class="function">modrdn()</code> but is also allows the object to be moved to a
+  new place in the directory by means of the
+  <em class="parameter"><code>newsuperior</code></em> parameter.
+  </p><pre class="programlisting">
+      def set_password(self, principal, password, server=None):
+          """Set the password of `principal' to `password'."""
+  </pre><p>
+  This function sets the password for <em class="parameter"><code>principal</code></em> to
+  <em class="parameter"><code>password</code></em>. The <em class="parameter"><code>server</code></em> parameter
+  can again be used to override the default server binding as for the
+  <code class="function">search()</code> method.
+  </p><pre class="programlisting">
+      def change_password(self, principal, oldpass, newpass, server=None):
+          """Change the password of `principal' to `password'."""
+  </pre><p>
+  This function changes the password for principal
+  <em class="parameter"><code>principal</code></em>. The old password must be given in
+  <em class="parameter"><code>oldpass</code></em> and the new password in
+  <em class="parameter"><code>newpass</code></em>.
+  </p></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="reference.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="locator.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 1. API Reference </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Resource Location</td></tr></table></div></body></html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Chapter 1. API Reference</title><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /><link rel="start" href="index.html" title="Python-AD reference manual" /><link rel="up" href="index.html" title="Python-AD reference manual" /><link rel="prev" href="preface.html" title="Foreword" /><link rel="next" href="client.html" title="AD Client Interface" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 1. API Reference</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="preface.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="client.html">Next</a></td></tr></table><hr /></div><div class="chapter" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="id1244672"></a>Chapter 1. API Reference</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="reference.html#id1244676">Credential Management</a></span></dt><dt><span class="section"><a href="client.html">AD Client Interface</a></span></dt><dt><span class="section"><a href="locator.html">Resource Location</a></span></dt><dt><span class="section"><a href="error.html">Error Handling</a></span></dt></dl></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id1244676"></a>Credential Management</h2></div></div></div><p>
+  Most Active Directory operations require authentication. The default
+  authentication mechanism in AD is Kerberos. Unfortunately, it has always
+  been difficult to use Kerberos authentication with AD. It required for
+  example to have a properly configured <code class="filename">/etc/krb5.conf</code>
+  listing the realms you want to use and the Kerbers servers for those realms.
+  </p><p>
+  Fortunately Python-AD simplifies AD credential management significantly. It
+  does not require any system configuration and all functionality is embedded
+  in a single class named <code class="classname">Creds</code>. This class is
+  available from the Python package <span class="package">ad</span>
+  </p><pre class="programlisting">
+  from ad import Creds
+  </pre><p>
+  The constructor for the <code class="classname">Creds</code> class takes one
+  argument: <em class="parameter"><code>domain</code></em>. This parameter specifies the
+  default AD domain for credential management.
+  </p><pre class="programlisting">
+  class Creds(object):
+      """Credential management."""
+
+      def __init__(self, domain):
+          """Constructor."""
+  </pre><p>
+  The <em class="parameter"><code>domain</code></em> parameter is used as a default when
+  principals are used without domain name. Credentials in any other domains
+  can be acquired as long as the domain is part of the same AD forest.
+  </p><p>
+  The <code class="classname">Creds</code> class has the following methods:
+  </p><pre class="programlisting">
+
+      def acquire(self, principal, password=None, keytab=None, server=None):
+          """Acquire credentials."""
+  </pre><p>
+  The <code class="function">acquire()</code> function acquires credentials for
+  principal <em class="parameter"><code>principal</code></em>. The principal can either a
+  unqualified principal, in which case the default domain is assumed, or a
+  principal in the form of <code class="varname">user@domain</code> in which case
+  <code class="varname">domain</code> must be a domain in the same AD forest as the
+  default domain. The <em class="parameter"><code>password</code></em> contains the password to
+  the principal. If no password is given, a keytab will be used. This keytab
+  is can be specified by the <em class="parameter"><code>keytab</code></em> parameter. If this
+  parameter is not present either, the default system keytab is used.  The
+  <em class="parameter"><code>server</code></em> argument overrides the default Kerberos server
+  to acquire credentials from. If this argument is not given, a suitable
+  Kerberos server is autodetected.
+  </p><pre class="programlisting">
+
+      def load(self):
+          """Load credentials from the OS."""
+  </pre><p>
+  The function <code class="function">load()</code> loads credentials from the default
+  operating system credentials store. It raises an exception in case no
+  credentials are available.
+  </p><pre class="programlisting">
+
+      def principal(self):
+          """Return the current principal."""
+  </pre><p>
+  The <code class="function">principal()</code> method returns the current principal,
+  i.e. the principal that was last succesfully used in a call to
+  <code class="function">acquire()</code>.
+  </p><pre class="programlisting">
+
+      def release(self):
+          """Release all credentials."""
+  </pre><p>
+  The <code class="function">release()</code> method releases the currently held
+  credentials.  It is called automatically from the
+  <code class="classname">Creds</code> destructor.
+  </p><p>
+  Once credentials are acquired with <code class="function">acquire()</code>, they need
+  to be activated before they can be used. This is required because
+  credentials are a process-global resource and they need to be installed in a
+  place where other classes in Python-AD will be able to find them. Credential
+  activation is done by calling a function called
+  <code class="function">activate()</code> as follows:
+  </p><pre class="programlisting">
+  from ad import activate
+  activate(creds)
+  </pre><p>
+  The code fragment above will make the <code class="varname">creds</code> object the
+  globally active credentials. The <code class="function">activate()</code> can be
+  called multiple times on different objects. The semantics are that the
+  object on which <code class="function">activate()</code> was called last will be the
+  active credentials. If active credentials are released by calling the
+  <code class="function">release()</code> method of a <code class="classname">Creds</code>
+  instance, then the credentials that were previously active are activated. If
+  no previously activated credentials exist, there will be no credentials
+  available after this call.
+  </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="preface.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="client.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Foreword </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> AD Client Interface</td></tr></table></div></body></html>
