@@ -1,4 +1,4 @@
-Python-AD uses the Mercurial version control system. As Google code does not currently support Mercurial, we make use of the excellent [http://freehg.org freeHg free Mercurial hosting].
+Python-AD uses the Mercurial version control system. As Google code does not currently support Mercurial, we make use of the excellent [http://freehg.org freeHg Mercurial hosting] service.
 
 *Checking out the Code*
 
