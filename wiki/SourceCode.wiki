@@ -1,6 +1,6 @@
 Python-AD uses the Mercurial version control system. As Google code does not currently support Mercurial, we make use of the excellent [http://freehg.org freeHg Mercurial hosting] service.
 
-== Checking out the Code ==
+=== Checking out the Code ===
 
 You can check out the latest source code using the command.
 
@@ -8,6 +8,6 @@ You can check out the latest source code using the command.
   hg clone http://freehg.org/u/geertj/python-ad
 }}}
 
-== Web Access ==
+=== Web Access ===
 
 You can also [http://freehg.org/u/geertj/python-ad/ browse the source code] through the web.
